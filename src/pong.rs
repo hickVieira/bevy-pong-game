@@ -74,8 +74,8 @@ pub fn sys_spawn_ball(mut commands: Commands) {
         },
         Ball {
             dir: Vec2::new(
-                rand::random::<f32>() * 2. - 1.,
-                rand::random::<f32>() * 2. - 1.,
+                0.5 * rand::random::<f32>().signum(),
+                0.5 * rand::random::<f32>().signum(),
             )
             .normalize(),
         },
