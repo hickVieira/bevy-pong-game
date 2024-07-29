@@ -104,7 +104,7 @@ pub fn sys_move_ball(mut balls: Query<(&mut Transform, &Ball)>, time: Res<Time>)
     }
 }
 
-pub fn sys_collide_ball(
+pub fn sys_collide_ball_paddle(
     mut balls: Query<(&Transform, &mut Ball)>,
     paddles: Query<(&Transform, &Paddle), With<Paddle>>,
 ) {
@@ -119,6 +119,9 @@ pub fn sys_collide_ball(
             }
         }
     }
+}
+
+pub fn sys_collide_ball_walls(mut balls: Query<(&Transform, &mut Ball)>) {
     for (ball_t, mut ball_d) in &mut balls {
         if ball_t.translation.x >= 350. {
             ball_d.dir.x = -ball_d.dir.x.abs()
