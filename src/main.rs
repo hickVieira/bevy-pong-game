@@ -9,8 +9,9 @@ fn main() {
             Startup,
             (
                 pong::sys_spawn_camera,
-                pong::sys_spawn_players,
+                pong::sys_spawn_paddles,
                 pong::sys_spawn_ball,
+                pong::sys_spawn_score,
             )
                 .chain(),
         )
@@ -19,6 +20,8 @@ fn main() {
             (
                 pong::sys_move_paddles,
                 pong::sys_move_ball,
+                pong::sys_process_score,
+                pong::sys_process_text,
                 pong::sys_collide_ball_walls,
                 pong::sys_collide_ball_paddle,
             )

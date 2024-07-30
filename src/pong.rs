@@ -12,19 +12,28 @@ pub struct Ball {
     dir: Vec2,
 }
 
+#[derive(Component)]
+pub struct Score {
+    left: u32,
+    right: u32,
+}
+
 pub fn sys_spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
 
-pub fn sys_spawn_players(mut commands: Commands) {
-    commands.spawn(SpriteBundle {
-        sprite: Sprite {
-            color: Color::WHITE,
-            custom_size: Some(Vec2::new(700., 500.)),
+pub fn sys_spawn_paddles(mut commands: Commands) {
+    commands.spawn((
+        SpriteBundle {
+            sprite: Sprite {
+                color: Color::WHITE,
+                custom_size: Some(Vec2::new(700., 500.)),
+                ..Default::default()
+            },
             ..Default::default()
         },
-        ..Default::default()
-    });
+        Score { left: 0, right: 0 },
+    ));
 
     commands.spawn((
         SpriteBundle {
@@ -82,6 +91,24 @@ pub fn sys_spawn_ball(mut commands: Commands) {
     ));
 }
 
+pub fn sys_spawn_score(mut commands: Commands) {
+    commands.spawn(Text2dBundle {
+        transform: Transform::from_translation(Vec3::new(0., 300., 0.)),
+        text: Text {
+            sections: vec![TextSection {
+                value: "p1:p2".to_string(),
+                style: TextStyle {
+                    font_size: 40.,
+                    color: Color::WHITE,
+                    ..Default::default()
+                },
+            }],
+            ..Default::default()
+        },
+        ..Default::default()
+    });
+}
+
 pub fn sys_move_paddles(
     mut paddles: Query<(&mut Transform, &Paddle)>,
     input: Res<ButtonInput<KeyCode>>,
@@ -137,4 +164,19 @@ pub fn sys_collide_ball_walls(mut balls: Query<(&Transform, &mut Ball)>) {
             ball_d.dir.y = ball_d.dir.y.abs()
         }
     }
+}
+
+pub fn sys_process_score(mut balls: Query<(&Ball, &Transform)>, mut scores: Query<&mut Score>) {
+    for (_ball, transform) in &mut balls {
+        if transform.translation.x >= 350. {
+            scores.get_single_mut().unwrap().left += 1;
+        } else if transform.translation.x <= -350. {
+            scores.get_single_mut().unwrap().right += 1;
+        }
+    }
+}
+
+pub fn sys_process_text(scores: Query<&Score>, mut texts: Query<&mut Text>) {
+    let score = scores.get_single().unwrap();
+    texts.get_single_mut().unwrap().sections[0].value = format!("{} : {}", score.left, score.right);
 }
