@@ -4,3 +4,5 @@ Simple pong game I made. Following [PhaestusFox](https://www.youtube.com/watch?v
 # run
 cargo run -r
 ```
+
+![Image](pong.png "game")
