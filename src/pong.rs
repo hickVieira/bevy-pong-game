@@ -7,7 +7,7 @@ pub struct Paddle {
     dir: i8,
 }
 
-#[derive(Component, Default)]
+#[derive(Component)]
 pub struct Ball {
     dir: Vec2,
 }
@@ -95,6 +95,8 @@ pub fn sys_move_paddles(
         if input.pressed(paddle.move_down) {
             transform.translation.y -= 400. * time.delta_seconds();
         }
+
+        transform.translation.y = transform.translation.y.clamp(-175., 175.);
     }
 }
 
